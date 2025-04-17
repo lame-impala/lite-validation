@@ -1,0 +1,94 @@
+plugins:
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+
+Layout/LineLength:
+  Exclude:
+    - spec/**/*.rb
+
+Lint/ConstantDefinitionInBlock:
+  Exclude:
+    - spec/**/*.rb
+
+Lint/EmptyBlock:
+  Exclude:
+    - spec/**/*.rb
+
+Lint/ShadowingOuterLocalVariable:
+  Enabled: false
+
+Lint/UnusedMethodArgument:
+  AllowUnusedKeywordArguments: true
+
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: start_of_line
+
+Metrics/MethodLength:
+  Max: 20
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*.rb
+
+Metrics/ModuleLength:
+  Max: 200
+  Exclude:
+    - spec/**/*.rb
+
+Naming/MethodParameterName:
+  Exclude:
+    - spec/**/*.rb
+Naming/VariableNumber:
+  Enabled: false
+
+Style/ArgumentsForwarding:
+  Enabled: false
+
+Naming/BlockForwarding:
+  Enabled: false
+
+Lint/BooleanSymbol:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Max: 3
+
+RSpec/ExampleLength:
+  Max: 10
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 10
+
+Style/Documentation:
+  Enabled: false
+
+Style/EachWithObject:
+  Enabled: false
+
+Style/HashSyntax:
+  Enabled: false
+
+Style/HashConversion:
+  Enabled: false
+
+Style/ModuleFunction:
+  Enabled: false
+Style/MultilineBlockChain:
+  Enabled: false
+
+Style/RedundantArrayConstructor:
+  Enabled: false
+
+Style/RedundantSelfAssignment:
+  Enabled: false
+
+Style/MethodCallWithoutArgsParentheses:
+  Enabled: false
+
+Style/SingleArgumentDig:
+  Enabled: false
+
+Style/TrailingUnderscoreVariable:
+  Enabled: false
