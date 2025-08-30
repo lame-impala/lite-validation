@@ -107,6 +107,8 @@ RSpec.configure do |config|
   #   # as the one that triggered the failure.
   #   Kernel.srand config.seed
   at_exit do
+    next unless RSpec.world.example_groups.any? { _1.name == 'RSpec::ExampleGroups::README' }
+
     ReadmeHelper.ensure_consumed!
   end
 end

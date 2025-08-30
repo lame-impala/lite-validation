@@ -1,13 +1,7 @@
 # frozen_string_literal: true
 
-require 'lite/local_env'
-
-Lite::LocalEnv.load_into(ENV)
-
 source 'https://rubygems.org'
 gemspec
-
-gem 'lite-data', git: "https://#{ENV.fetch('BITBUCKET', nil)}@bitbucket.org/TomMix/lite-data", branch: :main
 
 group :test do
   gem 'activemodel'
@@ -19,5 +13,6 @@ group :test do
   gem 'rspec', '~> 3'
   gem 'rubocop'
   gem 'rubocop-rspec'
+  gem 'ruby-prof'
   gem 'simplecov'
 end

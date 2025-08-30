@@ -12,6 +12,8 @@ Gem::Specification.new do |spec|
   spec.description = <<~DESC
     Validation of complex structures
   DESC
+
+  spec.licenses = ['MIT']
   spec.homepage = 'https://github.com/lame-impala/lite-validation'
 
   spec.required_ruby_version = '>= 3.2.0'
@@ -24,6 +26,7 @@ Gem::Specification.new do |spec|
     end
   end
   spec.require_paths = ['lib']
-  spec.licenses = ['MIT']
   spec.metadata['rubygems_mfa_required'] = 'true'
+
+  spec.add_dependency 'lite-data'
 end
