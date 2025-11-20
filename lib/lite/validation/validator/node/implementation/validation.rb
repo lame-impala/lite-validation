@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'dig'
 require_relative '../suspended'
+require_relative 'dig'
 require_relative 'helpers/call_foreign'
 require_relative 'helpers/yield_strategy'
 

@@ -11,6 +11,16 @@ module Lite
           module ApplyRuling
             include Ruling::Constructors
 
+            def self.apply_ruling(validator, ruling, path: nil)
+              return validator if ruling.is_a?(Ruling::Pass)
+
+              updated, _meta = validator.result.navigate(*path) do |result|
+                applied = Ruling.apply(ruling, result, validator.coordinator)
+                validator.merge_strategy.transform_result(applied, validator, path)
+              end
+              Helpers::WithResult.with_result(validator, updated)
+            end
+
             def commit(value)
               ApplyRuling.apply_ruling(self, Commit(value))
             end
@@ -25,16 +35,6 @@ module Lite
 
             def refute(error, at: nil, **opts)
               ApplyRuling.apply_ruling(self, Refute(error, **opts), path: at)
-            end
-
-            def self.apply_ruling(validator, ruling, path: nil)
-              return validator if ruling.is_a?(Ruling::Pass)
-
-              updated, _meta = validator.result.navigate(*path) do |result|
-                applied = Ruling.apply(ruling, result, validator.coordinator)
-                validator.merge_strategy.transform_result(applied, validator, path)
-              end
-              Helpers::WithResult.with_result(validator, updated)
             end
           end
         end
