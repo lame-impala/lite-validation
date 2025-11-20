@@ -92,7 +92,7 @@ module Lite
                 end
 
                 context 'when nested node is committed' do
-                  it 'returns valid result with a commited nested result' do
+                  it 'returns valid result with a committed nested result' do
                     disputed = valid.at?(:foo) do |node|
                       node.commit('FOO')
                     end.auto_commit(as: :hash)

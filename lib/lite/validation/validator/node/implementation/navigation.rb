@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require_relative 'dig'
-require_relative 'helpers/yield_validator'
 require_relative '../suspended'
+require_relative 'helpers/yield_validator'
 require_relative 'helpers/yield_strategy'
 
 module Lite

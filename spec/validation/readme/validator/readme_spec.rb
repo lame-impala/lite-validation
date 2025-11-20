@@ -171,6 +171,12 @@ module Lite
           end
         end
 
+        describe 'transformation' do
+          it 'describes the process correctly' do
+            eval(ReadmeHelper.snippet!(:transformation_hash))
+          end
+        end
+
         describe 'ruling' do
           context 'with complex structure being committed' do
             it 'describes the process correctly' do

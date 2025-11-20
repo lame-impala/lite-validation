@@ -34,6 +34,21 @@ module Lite
                 expect(valid.commit(2).result)
                   .to have_attributes(class: Result::Committed, success: Option.some(2))
               end
+
+              context 'when nested key is committed' do
+                let(:committed) do
+                  valid.commit('FOO', at: :foo)
+                       .commit('BAR', at: :bar)
+                       .auto_commit(as: :hash)
+                       .to_result
+                       .value!
+                end
+
+                it 'commits child at given path' do
+                  expect(committed)
+                    .to eq({ foo: 'FOO', bar: 'BAR' })
+                end
+              end
             end
 
             context 'when result is committed' do
@@ -111,7 +126,7 @@ module Lite
             end
 
             context 'when result is disputed' do
-              it 'returns disputed validator' do
+              it 'returns refuted validator' do
                 expect(disputed.refute(second_error).result)
                   .to have_attributes(class: Result::Refuted, errors_root: [second_error])
               end

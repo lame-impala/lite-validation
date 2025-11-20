@@ -90,5 +90,8 @@ Style/MethodCallWithoutArgsParentheses:
 Style/SingleArgumentDig:
   Enabled: false
 
+Style/SymbolProc:
+  Enabled: false
+
 Style/TrailingUnderscoreVariable:
   Enabled: false

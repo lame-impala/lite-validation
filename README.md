@@ -5,20 +5,20 @@ transform input into new shape through an immutable, composable interface
 that treats validation as a general-purpose computational tool.
 
 - Extensible wrapper system supports custom collections (like `ActiveRecord::Relation`)
-- Pluggable predicate engines — ships with `Dry::Logic` adapter for declarative validation
+- Pluggable predicate engines – ships with `Dry::Logic` adapter for declarative validation
 - Configurable result types and error formats
 - Transform data while validating through integrated commit/transformation mechanics
 
 Engineered for consistent performance regardless of validation outcome.
 This makes it ideal for high-throughput scenarios where validation serves
-as filtering, decision-making, or data processing logic — not just input sanitization.
+as filtering, decision-making, or data processing logic – not just input sanitization.
 Whether validating inputs that mostly pass or mostly fail, performance remains predictable.
 Perfect for applications that need validation throughout the system:
 API endpoints, background jobs, data pipelines, and anywhere you need reliable
 validation with transformation capabilities.
 
 ## Getting started
-Before validating data, you'll need to create a **coordinator** —
+Before validating data, you'll need to create a **coordinator** –
 a configuration object that defines how the validator integrates
 with your application. The coordinator specifies what types
 to use for results, options, and errors, making the library adaptable
@@ -79,18 +79,18 @@ expect(result.failure).to match({ errors: [have_attributes(code: :excessive)] })
 
 The core of validation is the `validate` method and its counterpart `validate?`.
 These methods expose the current value and context to your validation block,
-expecting a ruling in return — a decision about the value's validity.
+expecting a ruling in return – a decision about the value's validity.
 There are four types of ruling available in validate blocks:
-- `Pass()` — Indicates the value is valid. Rarely used since returning
+- `Pass()` – Indicates the value is valid. Rarely used since returning
   `nil` has the same effect.
-- `Dispute(code, message: nil, data: nil)` — Marks the value as invalid but allows validation
+- `Dispute(code, message: nil, data: nil)` – Marks the value as invalid but allows validation
   to continue on this node. All ancestor nodes also become disputed. You can also pass
   a structured error object: `Dispute(structured_error)`
-- `Refute(code, message: nil, data: nil)` — Marks the value as invalid with a fatal error
+- `Refute(code, message: nil, data: nil)` – Marks the value as invalid with a fatal error
   that stops further validation on this node. Parent nodes become disputed unless this
   occurs in a [critical section](#critical-section). Also accepts structured errors: `Refute(structured_error)`.
-- `Commit(value)` — Transforms the input data into a new structure. This enables validation
-  with simultaneous data transformation — we'll cover this [later](#transforming-the-validated-object).
+- `Commit(value)` – Transforms the input data into a new structure. This enables validation
+  with simultaneous data transformation – we'll cover this [later](#transforming-the-validated-object).
   Commited node can't be reopened for validation again, such attempt will trigger runtime error.
 
 The distinction between `Dispute` and `Refute` gives you some control over validation flow:
@@ -99,7 +99,7 @@ enough to halt processing.
 
 ### Validating structured data
 The library's capabilities become more apparent with hierarchical data.
-Pass a path as the first argument to `validate` — validator
+Pass a path as the first argument to `validate` – validator
 will navigate to that value and yield it to the validation block:
 
 ```ruby rspec validation_hash_aligned
@@ -125,7 +125,7 @@ expect(result.failure).to match({ children: { bar: { errors: [have_attributes(co
 
 This separation enables two powerful patterns:
 
-**1. Meaningful error keys** — Store errors under descriptive names rather than raw data keys:
+**1. Meaningful error keys** – Store errors under descriptive names rather than raw data keys:
 
 ```ruby rspec validation_hash_tuple_unaligned
 result = Validator
@@ -137,10 +137,10 @@ result = Validator
 expect(result.failure).to match({ children: { total: { errors: [have_attributes(code: :excessive)] } } })
 ```
 
-Note how the `from` parameter accepts an array of paths — this creates a tuple from multiple values,
+Note how the `from` parameter accepts an array of paths – this creates a tuple from multiple values,
 perfect for cross-field validations.
 
-**2. Data transformation** — Remap input data into new structures using `Commit` rulings.
+**2. Data transformation** – Remap input data into new structures using `Commit` rulings.
 The `from` parameter lets you source data from one location while building transformed
 output at another. We'll explore this pattern
 in detail [later](#transforming-the-validated-object).
@@ -148,7 +148,7 @@ in detail [later](#transforming-the-validated-object).
 ### Alternative syntax
 You can also apply rulings directly to validator nodes rather
 of returning them from validation blocks. This permits
-more concise phrasing in certain cases — for example when passing validator
+more concise phrasing in certain cases – for example when passing validator
 into functions:
 
 ```ruby rspec node_disputed
@@ -163,7 +163,7 @@ expect(disputed.to_result.failure)
   .to match({ children: { total: { errors: [have_attributes(code: :excessive)] } } })
 ```
 
-Remember that validators are immutable — methods like `dispute`, `refute`, and `commit`
+Remember that validators are immutable – methods like `dispute`, `refute`, and `commit`
 return new validator instance with updated state.
 
 ### Handling missing values
@@ -171,18 +171,18 @@ The `validate?` method provides flexible handling of missing values.
 While `validate` immediately refutes nodes when values aren't found,
 `validate?` offers more nuanced options:
 
-**Default behavior:** Skip validation entirely if the value is missing — the validator state
+**Default behavior:** Skip validation entirely if the value is missing – the validator state
 remains unchanged.
 
 **With missing value strategies:** Call `validate?` without a block, then chain `.some_or_nil` or `.option`
 to control how missing values are handled:
 
-- **`some_or_nil`** — Passes `nil` for missing values. In tuples, only missing fields become `nil`,
+- **`some_or_nil`** – Passes `nil` for missing values. In tuples, only missing fields become `nil`,
   not the entire tuple.
-- **`option`** — Passes an option type (like `Dry::Result::Failure(Unit)` when using the Dry interface).
+- **`option`** – Passes an option type (like `Dry::Result::Failure(Unit)` when using the Dry interface).
   Again, in tuples only missing fields become *none* values.
 
-The `option` strategy enables validations where fields have disjunctive relationships —
+The `option` strategy enables validations where fields have disjunctive relationships –
 like "either `:foo` or `:bar` must be set, but not both":
 
 ```ruby rspec validation_option
@@ -222,7 +222,7 @@ expect(result.failure)
   .to match({ children: { foo: { errors: [have_attributes(code: :invalid_access)] } } })
 ```
 
-This means you can validate any object without worrying about method availability — missing methods
+This means you can validate any object without worrying about method availability – missing methods
 become validation errors rather than runtime exceptions.
 
 ## Predicates
@@ -249,11 +249,11 @@ end
 ```
 
 **Key concepts:**
-- **`Ruling::Invalidate`** — A suspended ruling that doesn't specify severity (`dispute` vs `refute`).
+- **`Ruling::Invalidate`** – A suspended ruling that doesn't specify severity (`dispute` vs `refute`).
   The caller determines severity when using the predicate via `satisfy`.
-- **`validate_value`** — Handles definite values (the common case)
-- **`validate_option`** — Handles optional values from `satisfy?` with the option strategy.
-This is not required — omit if your predicate doesn't need to handle missing values.
+- **`validate_value`** – Handles definite values (the common case)
+- **`validate_option`** – Handles optional values from `satisfy?` with the option strategy.
+This is not required – omit if your predicate doesn't need to handle missing values.
 
 This separation lets predicates work with both definite and optional values
 while leaving severity decisions to the validation context where they're used.
@@ -316,7 +316,7 @@ expect(result.failure)
 disputes or refutations, giving you control over validation flow.
 
 **Missing values:** Like `validate?`, the `satisfy?` method handles missing values
-gracefully — skipping validation by default, or using `some_or_nil`/`option` strategies
+gracefully – skipping validation by default, or using `some_or_nil`/`option` strategies
 when chained.
 
 ## Navigation
@@ -443,10 +443,10 @@ variants (`at?`, `each_at?`) that handle missing values gracefully. Note that
 make sense for collection elements.
 
 **Supported collections:** Currently `each_at` works with `Array` and `Hash`. You can add support
-for other collection types (like `Set` or `ActiveRecord::Relation`) using [custom wrappers](#custom-wrappers).
+for other collection types (like `Set` or `ActiveRecord::Relation`) using [custom wrappers](#implementing-custom-wrappers).
 
 ## Flow control
-Basic flow control comes from the `Dispute`/`Refute` distinction—`Refute` rulings skip
+Basic flow control comes from the `Dispute`/`Refute` distinction – `Refute` rulings skip
 all subsequent validations on that node.
 
 For more sophisticated control, use `with_valid` to conditionally execute validation
@@ -542,12 +542,37 @@ letting you reshape data while validating it.
 You can commit values through several mechanisms:
 - Return `Commit(value)` from a `validate` block
 - Call the `commit(value)` method on a validator node
+- Use `transform` / `transform?` - extract and commit values with optional transformation
 - Pass `commit: true` to the `validate` or `satisfy` method (commits the original value if validation passes)
 - Pass `commit: <collection_type>` to the `each_at` - gathers values of all committed nodes
-into the specified collection — either `array` or `hash` and commits them to the node 
+into the specified collection – either `array` or `hash` and commits them to the node 
 after the iteration.
 
-Individual value commits aren't enough — you must also commit the containing structure. 
+The `transform`/`transform?` methods mirror the semantics of the `validate`/`validate?` pair,
+only they don't expect a ruling to be returned from the block, just the bare value. 
+The `transform?` variant supports suspended execution with `.option` and `.some_or_nil` strategies.
+
+
+```ruby rspec transformation_hash
+result = Validator.instance({ bar: 'bar' }, coordinator)
+                  .transform(from: [:bar]) { _1.upcase }
+                  .to_result
+                  .value!
+
+expect(result).to eq('BAR')
+
+result = Validator.instance({}, coordinator)
+                  .transform?(from: [:bar])
+                  .option { _1.value_or { 'default' } }
+                  .to_result
+                  .value!
+
+expect(result).to eq('default')
+```
+
+### Structural commitment
+
+Individual value commits aren't enough – you must also commit the containing structure. 
 The validator can't automatically determine the desired output format, 
 so you need to explicitly commit each level.
 
@@ -558,12 +583,14 @@ def self.item(item)
   item
     .satisfy(:name, commit: true) { :presence }
     .satisfy(:unit_price, from: [:price], commit: true ) { :presence }
+    .transform(:note, from: [:meta, :note]) { _1 }
     .auto_commit(as: :hash)
 end
 
+
 original_data = { 
   customer: { name: 'John Doe' }, 
-  items: [{ price: 100, name: 'Item 1' }], 
+  items: [{ price: 100, name: 'Item 1', meta: { note: 'A note' } }], 
   price: 100 
 }
 
@@ -577,7 +604,7 @@ result = Validator
 
 transformed_data = { 
   customer_name: 'John Doe', 
-  line_items: [{ name: 'Item 1', unit_price: 100 }], 
+  line_items: [{ name: 'Item 1', unit_price: 100, note: 'A note' }], 
   total: 100 
 }
 
@@ -585,12 +612,18 @@ expect(result.success).to eq(transformed_data)
 ```
 
 This example demonstrates the full transformation pipeline:
-1. Extract and validate data from nested sources (`customer.name`)
+1. Extract and validate data from nested sources (`customer.name`, `items.meta.note`)
 2. Commit individual values under new keys (`customer_name`, `total`, `line_items`, `unit_price`)
 3. Build the final transformed structure with `auto_commit`
 
 The result is a validated and transformed structure entirely different
 from the original data.
+
+**Performance consideration:** This library is built primarily for validation workflows 
+with transformation capabilities as a convenience feature. 
+It is not a dedicated transformation tool. For transformation-heavy workflows, traditional explicit 
+Ruby transformations or specialized tools will provide significantly better performance. Use the 
+validator's transformation features when validation is the primary goal and transformation is incidental.
 
 ## Implementing custom wrappers
 The validator supports `Hash` and `Array` out of the box, 
@@ -658,7 +691,7 @@ handling patterns and result types, whether you're using a proprietary solution,
 
 ### Validation errors
 Validation errors must include the `StructuredError` marker module. This module
-defines abstract methods as suggestions rather than requirements — the library
+defines abstract methods as suggestions rather than requirements – the library
 works with any type that includes the module.
 
 For simple cases, use the built-in `StructuredError::Record` class, which accepts:
@@ -694,7 +727,7 @@ method determines how the tree gets transformed into the final error
 structure returned by `to_result`. Different applications need different final formats.
 
 **Hierarchical Strategy** (`Coordinator::Errors::Hierarchical`)
-Preserves the tree structure as nested hashes — most natural for debugging:
+Preserves the tree structure as nested hashes – most natural for debugging:
 
 ```ruby rspec with_hierarchical_adapter
 expected_failure = {
@@ -711,7 +744,7 @@ expect(result.to_result.failure).to eq(expected_failure)
 ```
 
 **Flat Strategy** (`Coordinator::Errors::Flat`)
-Flattens errors into path-value tuples — useful for processing or storage:
+Flattens errors into path-value tuples – useful for processing or storage:
 
 ```ruby rspec with_flat_adapter
 expected_failure = [
