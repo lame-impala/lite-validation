@@ -157,6 +157,60 @@ module Lite
                 end
               end
             end
+
+            context 'when suspended with some_or_nil' do
+              it 'yields validator into the block' do
+                expect do |yield_probe|
+                  valid.at?(:foo, :bar).some_or_nil do |node|
+                    yield_probe.to_proc.call
+                    expect(node.value).to eq(7)
+                    node
+                  end
+                end.to yield_control
+              end
+
+              context 'when value is missing' do
+                it 'yields node into the block' do
+                  expect do |yield_probe|
+                    valid.at?(:foo, :bax).some_or_nil do |node|
+                      yield_probe.to_proc.call
+                      expect(node.value).to be_nil
+                      node
+                    end
+                  end.to yield_control
+                end
+              end
+
+              context 'when navigating to tuple' do
+                let(:value) { { foo: { number: 7 }, bar: { number: 5 } } }
+
+                context 'when keys are present' do
+                  it 'yields node into the block' do
+                    expect do |yield_probe|
+                      valid.at?([%i[foo number], %i[bar number]]).some_or_nil do |node|
+                        yield_probe.to_proc.call
+                        expect(node.value).to eq([7, 5])
+                        node
+                      end
+                    end.to yield_control
+                  end
+                end
+
+                context 'when some keys are missing' do
+                  let(:value) { { foo: { number: 7 } } }
+
+                  it 'yields node into the block' do
+                    expect do |yield_probe|
+                      valid.at?([%i[foo number], %i[bar number]]).some_or_nil do |node|
+                        yield_probe.to_proc.call
+                        expect(node.value).to eq([7, nil])
+                        node
+                      end
+                    end.to yield_control
+                  end
+                end
+              end
+            end
           end
 
           describe '#at' do

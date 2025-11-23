@@ -24,8 +24,8 @@ module Lite
               end
 
               module Nullify
-                def self.child_parameters(_validator, option, _result, &block)
-                  block.call(option.some_or_nil)
+                def self.child_parameters(validator, option, _result, &block)
+                  block.call(option.some_or_nil, validator.send(:state).value_definite)
                 end
 
                 def self.block_parameters(_validator, option, _result, &block)
